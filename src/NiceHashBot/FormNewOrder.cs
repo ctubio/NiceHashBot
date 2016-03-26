@@ -22,10 +22,10 @@ namespace NiceHashBot
                 this.comboBox1.Items.Add(A);
 
             foreach (string A in APIWrapper.ALGORITHM_NAME)
-                this.comboBox2.Items.Add(A);
+                    this.comboBox2.Items.Add(A);
 
-            comboBox1.SelectedIndex = 0;
-            comboBox2.SelectedIndex = 0;
+            comboBox1.SelectedIndex = 1;
+            comboBox2.SelectedIndex = 1;
 
             RefreshPoolList();
             AdvancedOptionsShown = true;

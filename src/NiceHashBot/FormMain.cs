@@ -72,9 +72,10 @@ namespace NiceHashBot
                     PriceText += " BTC/" + APIWrapper.SPEED_TEXT[Algorithm] + "/Day";
                     LVI.SubItems.Add(PriceText);
                     LVI.SubItems.Add(Orders[i].OrderStats.BTCAvailable.ToString("F8"));
-                    LVI.SubItems.Add(Orders[i].OrderStats.Workers.ToString());
+                    LVI.SubItems.Add(Orders[i].OrderStats.BTCPaid.ToString("F8"));
                     string SpeedText = (Orders[i].OrderStats.Speed * APIWrapper.ALGORITHM_MULTIPLIER[Algorithm]).ToString("F4") + " (" + Orders[i].Limit.ToString("F2") + ") " + APIWrapper.SPEED_TEXT[Algorithm] + "/s";
                     LVI.SubItems.Add(SpeedText);
+                    LVI.SubItems.Add(Orders[i].OrderStats.Workers.ToString());
                     if (!Orders[i].OrderStats.Alive)
                         LVI.BackColor = Color.PaleVioletRed;
                     else
