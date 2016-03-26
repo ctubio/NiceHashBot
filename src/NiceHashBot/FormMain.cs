@@ -159,16 +159,8 @@ namespace NiceHashBot
         {
             settingsToolStripMenuItem_Click(sender, e);
         }
-
-        private void setToUnlimitedToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (listView1.SelectedIndices.Count == 0)
-                return;
-
-            OrderContainer.SetLimit(listView1.SelectedIndices[0], 0);
-        }
-
-        private void setToToolStripMenuItem_Click(object sender, EventArgs e)
+       
+        private void speedLimitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (listView1.SelectedIndices.Count == 0)
                 return;

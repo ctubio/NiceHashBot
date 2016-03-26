@@ -53,8 +53,6 @@ namespace NiceHashBot
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.speedLimitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setToUnlimitedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setMaximalPriceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -216,26 +214,10 @@ namespace NiceHashBot
             // 
             // speedLimitToolStripMenuItem
             // 
-            this.speedLimitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.setToUnlimitedToolStripMenuItem,
-            this.setToToolStripMenuItem});
             this.speedLimitToolStripMenuItem.Name = "speedLimitToolStripMenuItem";
             this.speedLimitToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.speedLimitToolStripMenuItem.Text = "Speed limit";
-            // 
-            // setToUnlimitedToolStripMenuItem
-            // 
-            this.setToUnlimitedToolStripMenuItem.Name = "setToUnlimitedToolStripMenuItem";
-            this.setToUnlimitedToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.setToUnlimitedToolStripMenuItem.Text = "Set to unlimited";
-            this.setToUnlimitedToolStripMenuItem.Click += new System.EventHandler(this.setToUnlimitedToolStripMenuItem_Click);
-            // 
-            // setToToolStripMenuItem
-            // 
-            this.setToToolStripMenuItem.Name = "setToToolStripMenuItem";
-            this.setToToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.setToToolStripMenuItem.Text = "Set to ...";
-            this.setToToolStripMenuItem.Click += new System.EventHandler(this.setToToolStripMenuItem_Click);
+            this.speedLimitToolStripMenuItem.Click += new System.EventHandler(this.speedLimitToolStripMenuItem_Click);
             // 
             // setMaximalPriceToolStripMenuItem
             // 
@@ -290,8 +272,6 @@ namespace NiceHashBot
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem removeToolStripMenuItem;
         private ToolStripMenuItem speedLimitToolStripMenuItem;
-        private ToolStripMenuItem setToUnlimitedToolStripMenuItem;
-        private ToolStripMenuItem setToToolStripMenuItem;
         private ToolStripMenuItem setMaximalPriceToolStripMenuItem;
     }
 }
