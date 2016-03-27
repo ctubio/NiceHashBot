@@ -62,7 +62,7 @@ public class HandlerClass
         }
 
         // Following line of code makes the rest of the code to run only once per minute.
-        if ((++Tick % 282) != 0) return;
+        if ((Tick % 242) != 0) return;
 
         if (r>0 && OrderStats.BTCPaid>0 && ((r - OrderStats.BTCPaid) < m) && OrderStats.SpeedLimit < 4250)
         {
