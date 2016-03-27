@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using NiceHashBotLib;
 using Newtonsoft.Json;
+using WMPLib;
 
 namespace NiceHashBot
 {
@@ -133,7 +134,17 @@ namespace NiceHashBot
                 {
                     Limit = (double)Parameters[2];
                     if (Limit < 0) Limit = 0;
-                    LinkedInstance.SetLimit(Limit);
+                    if (Limit == 0)
+                    {
+                        LinkedInstance.Stop(true);
+                        try {
+                            WMPLib.WindowsMediaPlayer wplayer = new WMPLib.WindowsMediaPlayer();
+                            wplayer.URL = "http://antminer/a.mp3";
+                            wplayer.controls.play();
+                        }
+                        catch { }
+                    }
+                    else LinkedInstance.SetLimit(Limit);
                 }
             }
         }

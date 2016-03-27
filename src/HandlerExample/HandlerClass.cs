@@ -17,84 +17,73 @@ public class HandlerClass
     public static void HandleOrder(ref Order OrderStats, ref double MaxPrice, ref double NewLimit)
     {
         // Following line of code makes the rest of the code to run only once per minute.
-        if ((++Tick % 120) != 0) return;
+        if ((++Tick % 121) != 0) return;
 
         // Perform check, if order has been created at all. If not, stop executing the code.
         if (OrderStats == null) return;
 
         // Retreive JSON data from API server. Replace URL with your own API request URL.
-        string JSONData = GetHTTPResponseInJSON("http://www.coinwarz.com/v1/api/coininformation/?apikey=<API_KEY>&cointag=<COIN>");
-        if (JSONData == null) return;
-
+        string JSONData = GetHTTPResponseInJSON("https://antminer/json_margin.php");
+        if (JSONData == null)
+        {
+            Console.WriteLine("Local margin down!");
+        }
         // Serialize returned JSON data.
-        CoinwarzResponse Response;
+        LocalStatsResponse Response;
+        double m = 0.01;
+        double r = 0;
+        double s = 25 / 50000;
+        string d = "00:00:00";
         try
         {
-            Response = JsonConvert.DeserializeObject<CoinwarzResponse>(JSONData);
+            Response = JsonConvert.DeserializeObject<LocalStatsResponse>(JSONData);
+            m = Response.margin;
+            r = Response.estimated_reward;
+            s = 25 / (Response.ghashes_ps / 1000);
+            d = Response.round_duration;
         }
         catch
         {
+            Console.WriteLine("Local margin grabage!");
+        }
+        
+        if (TimeSpan.Parse(d).TotalMinutes < 21)
+        {
+            try
+            {
+                double diff = r - OrderStats.BTCPaid;
+                Console.WriteLine("Stoping order #" + OrderStats.ID.ToString() + " Paid " + OrderStats.BTCPaid.ToString("F8") + " Reward " + r.ToString("F8") + " Diff " + diff.ToString("F8"));
+            }
+            catch
+            {
+            }
+            NewLimit = 0;
             return;
         }
 
-        // Check if exchange rate is provided - at least one exchange must be included.
-        if (Response.Data.ExchangeRates.Length == 0) return;
-        double ExchangeRate = Response.Data.ExchangeRates[0].ToBTC;
+        // Following line of code makes the rest of the code to run only once per minute.
+        if ((++Tick % 282) != 0) return;
 
-        // Calculate mining profitability in BTC per 1 TH of hashpower.
-        double HT = Response.Data.Difficulty * (Math.Pow(2.0, 32) / (1000000000000.0));
-        double CPD = Response.Data.BlockReward * 24.0 * 3600.0 / HT;
-        double C = CPD * ExchangeRate;
-
-        // Subtract service fees.
-        C -= 0.04 * C;
-
-        // Subtract minimal % profit we want to get.
-        C -= 0.01 * C;
-
-        // Set new maximal price.
-        MaxPrice = Math.Floor(C * 10000) / 10000;
-
-        // Example how to print some data on console...
-        Console.WriteLine("Adjusting order #" + OrderStats.ID.ToString() + " maximal price to: " + MaxPrice.ToString("F4"));
+        if (r>0 && OrderStats.BTCPaid>0 && ((r - OrderStats.BTCPaid) < m) && OrderStats.SpeedLimit < 4250)
+        {
+            NewLimit = (OrderStats.BTCPaid + m) / s;
+            //Console.WriteLine("Adjusting order #" + OrderStats.ID.ToString() + " speed limit to: " + NewLimit.ToString("F2"));
+        }
     }
 
     /// <summary>
     /// Data structure used for serializing JSON response from CoinWarz. 
     /// It allows us to parse JSON with one line of code and easily access every data contained in JSON message.
     /// </summary>
-    #pragma warning disable 0649
-    class CoinwarzResponse
+#pragma warning disable 0649
+    class LocalStatsResponse
     {
-        public bool Success;
-        public string Message;
-        
-        public class DataStruct
-        {
-            public string CoinName;
-            public string CoinTag;
-            public int BlockCount;
-            public double Difficulty;
-            public double BlockReward;
-            public bool IsBlockExplorerOnline;
-            public bool IsExchangeOnline;
-            public string Algorithm;
-            public class ExchangeRateStruct
-            {
-                public string Exchange;
-                public double ToUSD;
-                public double ToBTC;
-                public double Volume;
-                public double TimeStamp;
-            }
-            public ExchangeRateStruct[] ExchangeRates;
-            public double BlockTimeInSeconds;
-            public string HealthStatus;
-            public string Message;
-        }
-        public DataStruct Data;
+        public double margin;
+        public double estimated_reward;
+        public double ghashes_ps;
+        public string round_duration;
     }
-    #pragma warning restore 0649
+#pragma warning restore 0649
 
 
     /// <summary>
