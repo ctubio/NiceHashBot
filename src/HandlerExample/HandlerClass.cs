@@ -23,7 +23,7 @@ public class HandlerClass
         if (OrderStats == null) return;
 
         // Retreive JSON data from API server. Replace URL with your own API request URL.
-        string JSONData = GetHTTPResponseInJSON("https://antminer/json_margin.php");
+        string JSONData = GetHTTPResponseInJSON("http://antminer/json_margin.php");
         if (JSONData == null)
         {
             Console.WriteLine("Local margin down!");

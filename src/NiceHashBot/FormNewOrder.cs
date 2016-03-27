@@ -28,7 +28,7 @@ namespace NiceHashBot
             comboBox2.SelectedIndex = 1;
 
             RefreshPoolList();
-            AdvancedOptionsShown = true;
+            AdvancedOptionsShown = false;
             linkLabel1_LinkClicked(null, null);
         }
 
@@ -119,6 +119,11 @@ namespace NiceHashBot
             {
                 textBox1.Text = OFD.FileName;
             }
+        }
+
+        private void numericUpDown2_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

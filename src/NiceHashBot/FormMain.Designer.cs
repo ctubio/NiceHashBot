@@ -34,7 +34,6 @@ namespace NiceHashBot
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.orderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.poolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -73,19 +72,11 @@ namespace NiceHashBot
             // 
             // orderToolStripMenuItem
             // 
-            this.orderToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.createNewToolStripMenuItem});
+            this.orderToolStripMenuItem.Enabled = false;
             this.orderToolStripMenuItem.Name = "orderToolStripMenuItem";
             this.orderToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
             this.orderToolStripMenuItem.Text = "Order";
-            // 
-            // createNewToolStripMenuItem
-            // 
-            this.createNewToolStripMenuItem.Enabled = false;
-            this.createNewToolStripMenuItem.Name = "createNewToolStripMenuItem";
-            this.createNewToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.createNewToolStripMenuItem.Text = "Create new";
-            this.createNewToolStripMenuItem.Click += new System.EventHandler(this.createNewToolStripMenuItem_Click);
+            this.orderToolStripMenuItem.Click += new System.EventHandler(this.orderToolStripMenuItem_Click);
             // 
             // poolsToolStripMenuItem
             // 
@@ -254,7 +245,6 @@ namespace NiceHashBot
         private MenuStrip menuStrip1;
         private StatusStrip statusStrip1;
         private ToolStripMenuItem orderToolStripMenuItem;
-        private ToolStripMenuItem createNewToolStripMenuItem;
         private ToolStripMenuItem poolsToolStripMenuItem;
         private ToolStrip toolStrip1;
         private ListView listView1;

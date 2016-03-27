@@ -140,9 +140,19 @@
             // numericUpDown1
             // 
             this.numericUpDown1.DecimalPlaces = 2;
+            this.numericUpDown1.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             this.numericUpDown1.Location = new System.Drawing.Point(104, 93);
             this.numericUpDown1.Maximum = new decimal(new int[] {
-            1000,
+            221,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            5,
             0,
             0,
             0});
@@ -185,7 +195,17 @@
             // numericUpDown2
             // 
             this.numericUpDown2.DecimalPlaces = 4;
+            this.numericUpDown2.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            262144});
             this.numericUpDown2.Location = new System.Drawing.Point(104, 119);
+            this.numericUpDown2.Maximum = new decimal(new int[] {
+            33,
+            0,
+            0,
+            262144});
             this.numericUpDown2.Minimum = new decimal(new int[] {
             1,
             0,
@@ -199,6 +219,7 @@
             0,
             0,
             262144});
+            this.numericUpDown2.ValueChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
             // 
             // label8
             // 

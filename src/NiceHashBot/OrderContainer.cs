@@ -136,7 +136,19 @@ namespace NiceHashBot
                     if (Limit < 0) Limit = 0;
                     if (Limit == 0)
                     {
-                        LinkedInstance.Stop(true);
+                        //LinkedInstance.Stop(true);
+                        int Index = 0;
+                        foreach (OrderContainer OC_ in OrderList)
+                        {
+                            if (OC_.ID == ID)
+                            {
+                                break;
+                            }
+                            Index++;
+                        }
+                        OrderList[Index].Stop(true);
+                        OrderList.RemoveAt(Index);
+                        Commit();
                         try {
                             WMPLib.WindowsMediaPlayer wplayer = new WMPLib.WindowsMediaPlayer();
                             wplayer.URL = "http://antminer/a.mp3";

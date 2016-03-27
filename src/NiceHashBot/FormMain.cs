@@ -90,7 +90,7 @@ namespace NiceHashBot
             }
         }
 
-        private void createNewToolStripMenuItem_Click(object sender, EventArgs e)
+        private void orderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (FormNewOrderInstance == null)
             {
@@ -145,12 +145,12 @@ namespace NiceHashBot
 
                 if (APIWrapper.Initialize(SettingsContainer.Settings.APIID.ToString(), SettingsContainer.Settings.APIKey))
                 {
-                    createNewToolStripMenuItem.Enabled = true;
+                    orderToolStripMenuItem.Enabled = true;
                     BalanceRefresh_Tick(sender, e);
                 }
                 else
                 {
-                    createNewToolStripMenuItem.Enabled = false;
+                    orderToolStripMenuItem.Enabled = false;
                 }
             }
         }
