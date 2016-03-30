@@ -28,6 +28,7 @@ namespace NiceHashBot
             comboBox2.SelectedIndex = 1;
 
             RefreshPoolList();
+            comboBox3.SelectedIndex = 6;
             AdvancedOptionsShown = false;
             linkLabel1_LinkClicked(null, null);
         }

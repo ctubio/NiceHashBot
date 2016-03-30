@@ -156,7 +156,10 @@ namespace NiceHashBot
                         }
                         catch { }
                     }
-                    else LinkedInstance.SetLimit(Limit);
+                    else {
+                        LinkedInstance.SetLimit(Limit);
+                        Commit();
+                    }
                 }
             }
         }

@@ -21,6 +21,12 @@ namespace NiceHashBot
             numericUpDown1.Value = OldID;
             textBox1.Text = OldKey;
             textBox2.Text = OldTwoFASecret;
+            Load += FormSettings_Load;
+        }
+
+        private void FormSettings_Load(Object sender, EventArgs e)
+        {
+            button1_Click(sender, e);
         }
 
         private void button1_Click(object sender, EventArgs e)

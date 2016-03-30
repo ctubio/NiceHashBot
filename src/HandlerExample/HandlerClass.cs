@@ -5,6 +5,7 @@ using System.IO;
 using System.Net; // For generating HTTP requests and getting responses.
 using NiceHashBotLib; // Include this for Order class, which contains stats for our order.
 using Newtonsoft.Json; // For JSON parsing of remote APIs.
+using WMPLib;
 
 public class HandlerClass
 {
@@ -26,33 +27,68 @@ public class HandlerClass
         string JSONData = GetHTTPResponseInJSON("http://antminer/json_margin.php");
         if (JSONData == null)
         {
-            Console.WriteLine("Local margin down!");
+            Console.WriteLine("[" + DateTime.Now.ToString() + "] Local margin down!!");
+            try
+            {
+                WMPLib.WindowsMediaPlayer wplayer = new WMPLib.WindowsMediaPlayer();
+                wplayer.URL = "http://antminer/c.mp3";
+                wplayer.controls.play();
+            }
+            catch { }
+            return;
         }
         // Serialize returned JSON data.
         LocalStatsResponse Response;
         double m = 0.01;
         double r = 0;
+        double g = 0;
         double s = 25 / 50000;
         string d = "00:00:00";
+        double p = OrderStats.BTCPaid;
         try
         {
             Response = JsonConvert.DeserializeObject<LocalStatsResponse>(JSONData);
             m = Response.margin;
             r = Response.estimated_reward;
-            s = 25 / (Response.ghashes_ps / 1000);
+            g = (Response.ghashes_ps / 1000);
+            p = p + Response.prepaid;
+            s = 25 / g;
+            g = (g / 1000);
             d = Response.round_duration;
         }
         catch
         {
-            Console.WriteLine("Local margin grabage!");
+            Console.WriteLine("[" + DateTime.Now.ToString() + "] Local margin grabage!!");
+            try
+            {
+                WMPLib.WindowsMediaPlayer wplayer = new WMPLib.WindowsMediaPlayer();
+                wplayer.URL = "http://antminer/c.mp3";
+                wplayer.controls.play();
+            }
+            catch { }
+            return;
         }
-        
+
         if (TimeSpan.Parse(d).TotalMinutes < 21)
         {
             try
             {
-                double diff = r - OrderStats.BTCPaid;
-                Console.WriteLine("Stoping order #" + OrderStats.ID.ToString() + " Paid " + OrderStats.BTCPaid.ToString("F8") + " Reward " + r.ToString("F8") + " Diff " + diff.ToString("F8"));
+                double diff = r - p;
+                string _diff = "";
+                if (diff > 0) _diff = "+";
+                double speed = (OrderStats.Speed / 1000);
+                string log = "[" + DateTime.Now.ToString() + "] Paid " + p.ToString("F8") + " Reward " + r.ToString("F8") + " " + Math.Round((diff * 100) / p, 2).ToString("F2") + "% Diff " + Math.Round(((r - p) * 100) / r, 2).ToString("F2") + "% "+ _diff + diff.ToString("F8") + " Hash " + speed.ToString("F2") + "/" + OrderStats.SpeedLimit.ToString("F2") + " Slush " + d + "/" + g.ToString("F2");
+                Console.WriteLine("[" + DateTime.Now.ToString() + "] Stoping order #" + OrderStats.ID.ToString());
+                Console.WriteLine(log);
+                string path = "C:\\htdocs\\phpmyminer\\results";
+                string contents;
+                using (StreamReader sreader = new StreamReader(path)) { contents = sreader.ReadToEnd(); }
+                File.Delete(path);
+                using (StreamWriter swriter = new StreamWriter(path, false))
+                {
+                    contents = log + Environment.NewLine + contents;
+                    swriter.Write(contents);
+                }
             }
             catch
             {
@@ -64,9 +100,9 @@ public class HandlerClass
         // Following line of code makes the rest of the code to run only once per minute.
         if ((Tick % 242) != 0) return;
 
-        if (r>0 && OrderStats.BTCPaid>0 && ((r - OrderStats.BTCPaid) < m) && OrderStats.SpeedLimit < 4250)
+        if (r>0 && p>0 && ((r - p) < m) && OrderStats.SpeedLimit < 9250)
         {
-            NewLimit = (OrderStats.BTCPaid + m) / s;
+            NewLimit = Math.Round((p + m) / s, 2);
             //Console.WriteLine("Adjusting order #" + OrderStats.ID.ToString() + " speed limit to: " + NewLimit.ToString("F2"));
         }
     }
@@ -81,7 +117,9 @@ public class HandlerClass
         public double margin;
         public double estimated_reward;
         public double ghashes_ps;
+        public double prepaid;
         public string round_duration;
+        public int auto;
     }
 #pragma warning restore 0649
 

@@ -160,7 +160,7 @@
             this.numericUpDown1.Size = new System.Drawing.Size(59, 20);
             this.numericUpDown1.TabIndex = 5;
             this.numericUpDown1.Value = new decimal(new int[] {
-            20,
+            10,
             0,
             0,
             0});
@@ -202,7 +202,7 @@
             262144});
             this.numericUpDown2.Location = new System.Drawing.Point(104, 119);
             this.numericUpDown2.Maximum = new decimal(new int[] {
-            33,
+            35,
             0,
             0,
             262144});
@@ -215,7 +215,7 @@
             this.numericUpDown2.Size = new System.Drawing.Size(59, 20);
             this.numericUpDown2.TabIndex = 6;
             this.numericUpDown2.Value = new decimal(new int[] {
-            30,
+            35,
             0,
             0,
             262144});
@@ -368,6 +368,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(121, 20);
             this.textBox1.TabIndex = 26;
+            this.textBox1.Text = "C:\\Users\\analpaper\\Desktop\\bit\\NiceHashBot_v1.0.3.1\\HandlerExample.dll";
             // 
             // button3
             // 
@@ -381,6 +382,7 @@
             // 
             // FormNewOrder
             // 
+            this.AcceptButton = this.button2;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(322, 311);

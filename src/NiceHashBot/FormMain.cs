@@ -6,6 +6,9 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using NiceHashBotLib;
+using System.Net; // For generating HTTP requests and getting responses.
+using Newtonsoft.Json; // For JSON parsing of remote APIs.
+using System.IO;
 
 namespace NiceHashBot
 {
@@ -49,6 +52,63 @@ namespace NiceHashBot
             {
                 toolStripLabel2.Text = Balance.Confirmed.ToString("F8") + " BTC";
             }
+
+            string JSONData = GetHTTPResponseInJSON("http://antminer/json_margin.php");
+            if (JSONData == null)
+            {
+                Console.WriteLine("[" + DateTime.Now.ToString() + "] Local margin down!");
+            }
+            LocalStatsResponse Response;
+            double m = 0.01;
+            double r = 0;
+            double g = 0;
+            double s = 25 / 50000;
+            string d = "00:00:00";
+            int a = 0;
+            try
+            {
+                Response = JsonConvert.DeserializeObject<LocalStatsResponse>(JSONData);
+                m = Response.margin;
+                r = Response.estimated_reward;
+                g = (Response.ghashes_ps / 1000);
+                s = 25 / g;
+                g = (g / 1000);
+                d = Response.round_duration;
+                a = Response.auto;
+                string _m = "!";
+                if (a == 0) _m = "";
+
+                OrderContainer[] Orders = OrderContainer.GetAll();
+                if (Orders.Length > 0 && Orders[0].OrderStats != null)
+                {
+                    double p = Orders[0].OrderStats.BTCPaid + Response.prepaid;
+                    double diff = r - p;
+                    string _diff = "";
+                    if (diff > 0) _diff = "+";
+                    double speed = (Orders[0].OrderStats.Speed / 1000);
+                    toolStripStatusLabel1.Text = m.ToString("F3") + _m + " - Paid " + p.ToString("F8") + " Reward " + r.ToString("F8") + " " + Math.Round((diff * 100) / p, 2).ToString("F2") + "% Diff " + Math.Round(((r - p) * 100) / r, 2).ToString("F2") + "% " + _diff + diff.ToString("F8") + " Hash " + speed.ToString("F2") + "/" + Orders[0].OrderStats.SpeedLimit.ToString("F2") + " Slush " + d + "/" + g.ToString("F2");
+                }
+                else {
+                    toolStripStatusLabel1.Text = m.ToString("F3") + _m + " Slush " + d + "/" + g.ToString("F2");
+                }
+                statusStrip1.Refresh();
+                if (a>0 && TimeSpan.Parse(d).TotalMinutes > a)
+                {
+                    if (Orders.Length == 0)
+                    {
+                        if (FormNewOrderInstance == null)
+                        {
+                            FormNewOrderInstance = new FormNewOrder();
+                            FormNewOrderInstance.Show();
+                            FormNewOrderInstance.AcceptButton.PerformClick();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine("[" + DateTime.Now.ToString() + "] Local margin grabage!");
+            }
         }
 
         private void TimerRefresh_Tick(object sender, EventArgs e)
@@ -80,7 +140,7 @@ namespace NiceHashBot
                         LVI.BackColor = Color.PaleVioletRed;
                     else
                         LVI.BackColor = Color.LightGreen;
-                    LVI.SubItems.Add("View competing orders");
+                    //LVI.SubItems.Add("View competing orders");
                 }
 
                 if (Selected >= 0 && Selected == i)
@@ -183,5 +243,50 @@ namespace NiceHashBot
                 OrderContainer.SetMaxPrice(listView1.SelectedIndices[0], FNI.Value);
             }
         }
+
+
+        /// <summary>
+        /// Data structure used for serializing JSON response from CoinWarz. 
+        /// It allows us to parse JSON with one line of code and easily access every data contained in JSON message.
+        /// </summary>
+#pragma warning disable 0649
+        class LocalStatsResponse
+        {
+            public double margin;
+            public double estimated_reward;
+            public double ghashes_ps;
+            public double prepaid;
+            public string round_duration;
+            public int auto;
+        }
+#pragma warning restore 0649
+
+        /// <summary>
+        /// Get HTTP JSON response for provided URL.
+        /// </summary>
+        /// <param name="URL">URL.</param>
+        /// <returns>JSON data returned by webserver or null if error occured.</returns>
+        private static string GetHTTPResponseInJSON(string URL)
+        {
+            try
+            {
+                HttpWebRequest WReq = (HttpWebRequest)WebRequest.Create(URL);
+                WReq.Timeout = 60000;
+                WebResponse WResp = WReq.GetResponse();
+                Stream DataStream = WResp.GetResponseStream();
+                DataStream.ReadTimeout = 60000;
+                StreamReader SReader = new StreamReader(DataStream);
+                string ResponseData = SReader.ReadToEnd();
+                if (ResponseData[0] != '{')
+                    throw new Exception("Not JSON data.");
+
+                return ResponseData;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
     }
 }
